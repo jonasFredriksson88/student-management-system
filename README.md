@@ -3,7 +3,7 @@
 
 ### **-Find student by ID**
 @GET
-http://localhost:8080/student-management-system/api/v1/students/1
+http://localhost:8080/student-management-system/api/v1/students/{id}
 >Om student inte finns så skickas status code 404 Not found(Custom exception)
 
 
@@ -49,7 +49,7 @@ http://localhost:8080/student-management-system/api/v1/students
 	
 ### **-Update one student CUSTOM**
 @PATCH
-http://localhost:8080/student-management-system/api/v1/students/1
+http://localhost:8080/student-management-system/api/v1/students/{id}
 >Query parameters: (firstname, lastname, email, phonenumber) 
 
 >Om id inte hittas skickas status code 404 Not found(Custom exception)
@@ -57,6 +57,6 @@ http://localhost:8080/student-management-system/api/v1/students/1
 	
 ### **-Delete one student**
 @Delete
-http://localhost:8080/student-management-system/api/v1/students/1
+http://localhost:8080/student-management-system/api/v1/students/{id}
 >Om id inte hittas skickas status code 404 Not found(Custom exception)
 	
