@@ -26,7 +26,6 @@ public class StudentRest {
 
     @POST
     public Response addStudent(Student student) {
-
         try {
             studentService.addStudent(student);
             return Response.ok(student).build();
@@ -115,21 +114,9 @@ public class StudentRest {
 
     @Path("{id}")
     @PATCH
-    public Response updateLastName(@PathParam("id") Long id,
-                                   @QueryParam("firstname") String firstName,
-                                   @QueryParam("lastname") String lastName,
-                                   @QueryParam("email") String email,
-                                   @QueryParam("phonenumber") String phoneNumber) {
-
-        Map<String, String> queryMap = new HashMap<>();
-
-        queryMap.put("firstName", firstName);
-        queryMap.put("lastName", lastName);
-        queryMap.put("email", email);
-        queryMap.put("phoneNumber", phoneNumber);
-
+    public Response updateStudentPatch(@PathParam("id") Long id, Student student) {
         try {
-            Student foundStudent = studentService.updateStudent(id, queryMap);
+            Student foundStudent = studentService.updateStudent(id, student);
             return Response.ok(foundStudent).build();
         } catch (NullPointerException e) {
             throw new StudentNotFoundException("Student with ID " + id + " was not found and could not be Updated.");

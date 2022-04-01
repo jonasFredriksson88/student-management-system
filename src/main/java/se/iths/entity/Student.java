@@ -19,6 +19,16 @@ public class Student {
     private String email;
     private String phoneNumber;
 
+    public Student() {
+    }
+
+    public Student(String firstName, String lastName, String email, String phoneNumber) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+    }
+
     public Long getId() {
         return id;
     }

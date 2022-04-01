@@ -20,7 +20,7 @@ public class StudentService {
     EntityManager entityManager;
 
     public void addStudent(Student student) {
-            entityManager.persist(student);
+        entityManager.persist(student);
     }
 
     public void replaceStudentInfo(Student student) {
@@ -38,6 +38,35 @@ public class StudentService {
         return entityManager.createQuery(queryString).getResultList();
     }
 
+    public List<Student> getAllStudents() {
+        return entityManager.createQuery("SELECT s FROM Student s", Student.class).getResultList();
+    }
+
+    public void removeStudent(Long id) {
+        entityManager.remove(findStudentById(id));
+    }
+
+    public Student updateStudent(Long id, Student newStudent) {
+        Student oldStudent = findStudentById(id);
+
+        if(newStudent.getFirstName() != null)
+            oldStudent.setFirstName(newStudent.getFirstName());
+        if(newStudent.getLastName() != null)
+            oldStudent.setLastName(newStudent.getLastName());
+        if(newStudent.getEmail() != null)
+            oldStudent.setEmail(newStudent.getEmail());
+        if(newStudent.getPhoneNumber() != null)
+            oldStudent.setPhoneNumber(newStudent.getPhoneNumber());
+
+        return entityManager.merge(oldStudent);
+    }
+
+    private Map<String, String> removeEmptyParams(Map<String, String> queryMap) {
+        return queryMap.entrySet().stream()
+                .filter(q -> q.getValue() != null)
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
+
     private String stringBuilder(Map<String, String> queryMap) {
         String queryString = "SELECT s FROM Student s WHERE ";
 
@@ -50,43 +79,10 @@ public class StudentService {
         }
 
         if(queryString.endsWith("AND ")) {
-           queryString = queryString.substring(0, queryString.length() - 5);
+            queryString = queryString.substring(0, queryString.length() - 5);
         }
 
         return queryString;
-    }
-
-    public List<Student> getAllStudents() {
-        return entityManager.createQuery("SELECT s FROM Student s", Student.class).getResultList();
-    }
-
-    public void removeStudent(Long id) {
-        entityManager.remove(findStudentById(id));
-    }
-
-    public Student updateStudent(Long id, Map<String, String> queryMap) {
-        Student foundStudent = findStudentById(id);
-
-        replaceStudentInfo(foundStudent, removeEmptyParams(queryMap));
-
-        return entityManager.merge(foundStudent);
-    }
-
-    private void replaceStudentInfo(Student foundStudent, Map<String, String> queryMap) {
-        for (Map.Entry<String, String> param : queryMap.entrySet()) {
-            switch (param.getKey()) {
-                case "firstName" -> foundStudent.setFirstName(param.getValue());
-                case "lastName" -> foundStudent.setLastName(param.getValue());
-                case "email" -> foundStudent.setEmail(param.getValue());
-                case "phoneNumber" -> foundStudent.setPhoneNumber(param.getValue());
-            }
-        }
-    }
-
-    private Map<String, String> removeEmptyParams(Map<String, String> queryMap) {
-        return queryMap.entrySet().stream()
-                .filter(q -> q.getValue() != null)
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
 }
