@@ -1,5 +1,10 @@
 # Laboration 1
 
+#### Fyra studenter genereras vid uppstart ####
+ - Bertil Eriksson, bertil.eriksson@gmail.com, 073-8492384
+ - Gunnar Göransson, gunnar.goransson@gmail.com, 073-3514861
+ - Berit Svensson, berit.svensson@gmail.com, 073-3794882
+ - Lisa Johansson, lisa.johansson@gmail.com, 073-5822493
 
 ### **-Find student by ID**
 @GET
@@ -29,7 +34,7 @@ http://localhost:8080/student-management-system/api/v1/students/
 		"firstName": "Johan",
 		"lastName": "Nilsson",
 		"email": "johan.nilsson@gmail.com",
-		"phoneNumber": "0765429515"
+		"phoneNumber": "076-5429515"
 	}	
 	
 	
@@ -43,16 +48,23 @@ http://localhost:8080/student-management-system/api/v1/students
 		"firstName": "David",
 		"lastName": "Johansson",
 		"email": "David.Johansson@gmail.com",
-		"phoneNumber": "0766718264"
+		"phoneNumber": "076-6718264"
 	}	
 	
 	
 ### **-Update one student CUSTOM**
 @PATCH
 http://localhost:8080/student-management-system/api/v1/students/{id}
->Query parameters: (firstname, lastname, email, phonenumber) 
-
 >Om id inte hittas skickas status code 404 Not found(Custom exception)
+
+	{
+		"firstName": "Anna",
+		"lastName": "Hansson",
+		"email": "anna.hansson@gmail.com",
+		"phoneNumber": "076-8244684"
+	}	
+
+
 	
 	
 ### **-Delete one student**
