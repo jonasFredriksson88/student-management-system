@@ -7,9 +7,9 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 @Provider
-public class StudentNoContentExceptionMapper implements ExceptionMapper<StudentNoContentException> {
+public class EntityNoContentExceptionMapper implements ExceptionMapper<EntityNoContentException> {
 
-    public Response toResponse(StudentNoContentException e) {
+    public Response toResponse(EntityNoContentException e) {
         ErrorMessage errorMessage = new ErrorMessage(e.getMessage(),e.getClass().getName(),204);
         return Response.status(Response.Status.NO_CONTENT)
                 .entity(errorMessage)

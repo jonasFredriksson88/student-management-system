@@ -1,9 +1,8 @@
 package se.iths.rest;
 
-
-import se.iths.entity.Student;
+import se.iths.entity.Teacher;
 import se.iths.exceptions.EntityBadRequestException;
-import se.iths.service.StudentService;
+import se.iths.service.TeacherService;
 
 import javax.inject.Inject;
 import javax.transaction.TransactionalException;
@@ -15,76 +14,75 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Path("students")
+@Path("teachers")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class StudentRest {
+public class TeacherRest {
 
     @Inject
-    StudentService studentService;
+    TeacherService teacherService;
 
     @POST
-    public Response addStudent(Student student) {
+    public Response addStudent(Teacher teacher) {
         try {
-            studentService.addStudent(student);
+            teacherService.addTeacher(teacher);
+            return Response.ok(teacher).build();
         } catch (
                 TransactionalException e) {
-            throw new EntityBadRequestException("There is already a student with email " + student.getEmail() + " Please try to login.");
+            throw new EntityBadRequestException("There is already a teacher with email " + teacher.getEmail() + " Please try to login.");
         } catch (
                 ConstraintViolationException e) {
             throw new EntityBadRequestException("You need to include first name, last name and email to proceed.");
         }
-        return Response.ok(student).build();
     }
 
     @PUT
-    public Response updateStudent(Student student) {
-        if (student.getId() == null) {
+    public Response updateTeacher(Teacher teacher) {
+        if (teacher.getId() == null) {
             throw new EntityBadRequestException("You need to add id to user.");
         }
 
         try {
-            studentService.replaceStudentInfo(student);
+            teacherService.replaceTeacherInfo(teacher);
         } catch (
                 TransactionalException e) {
-            throw new EntityBadRequestException("There is already a student with email " + student.getEmail() + " Please try to login.");
+            throw new EntityBadRequestException("There is already a teacher with email " + teacher.getEmail() + " Please try to login.");
         } catch (
                 ConstraintViolationException e) {
             throw new EntityBadRequestException("You need to include first name, last name and email to proceed.");
         }
-        return Response.ok(student).build();
+        return Response.ok(teacher).build();
     }
 
     @Path("{id}")
     @GET
-    public Response findStudent(@PathParam("id") Long id) {
-        return Response.ok(studentService.findStudentById(id)).build();
+    public Response findTeacher(@PathParam("id") Long id) {
+        return Response.ok(teacherService.findTeacherById(id)).build();
     }
 
     @GET
-    public Response getAllStudents() {
-        List<Student> foundStudents = studentService.getAllStudents();
-        if (foundStudents.isEmpty()) {
+    public Response getAllTeachers() {
+        List<Teacher> foundTeachers = teacherService.getAllTeachers();
+        if (foundTeachers.isEmpty()) {
             return Response.status(Response.Status.NO_CONTENT).build();
         }
-        return Response.ok(foundStudents).build();
+        return Response.ok(foundTeachers).build();
     }
 
     @Path("{id}")
     @DELETE
-    public Response removeStudent(@PathParam("id") Long id) {
-        studentService.removeStudent(id);
+    public Response removeTeacher(@PathParam("id") Long id) {
+        teacherService.removeTeacher(id);
 
         return Response.ok().build();
     }
 
     @GET
     @Path("custom")
-    public Response getStudentsCustomOrAll(@QueryParam("firstname") String firstName,
+    public Response getTeachersCustomOrAll(@QueryParam("firstname") String firstName,
                                            @QueryParam("lastname") String lastName,
                                            @QueryParam("email") String email,
                                            @QueryParam("phonenumber") String phoneNumber) {
-
 
         Map<String, String> queryMap = new HashMap<>();
 
@@ -93,18 +91,18 @@ public class StudentRest {
         queryMap.put("email", email);
         queryMap.put("phoneNumber", phoneNumber);
 
-        List<Student> foundStudents = studentService.findCustomStudents(queryMap);
+        List<Teacher> foundTeachers = teacherService.findCustomTeachers(queryMap);
 
-        if (foundStudents.isEmpty()) {
+        if (foundTeachers.isEmpty()) {
             return Response.status(Response.Status.NO_CONTENT).build();
         }
 
-        return Response.ok(foundStudents).build();
+        return Response.ok(foundTeachers).build();
     }
 
     @Path("{id}")
     @PATCH
-    public Response updateStudentPatch(@PathParam("id") Long id, Student student) {
-            return Response.ok(studentService.updateStudent(id, student)).build();
+    public Response updateTeacherPatch(@PathParam("id") Long id, Teacher teacher) {
+        return Response.ok(teacherService.updateTeacher(id, teacher)).build();
     }
 }

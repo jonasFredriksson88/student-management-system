@@ -1,12 +1,13 @@
 package se.iths.entity;
 
+
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Objects;
 
 @Entity
-@Table(name = "students")
-public class Student {
+@Table(name = "teachers")
+public class Teacher {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -24,10 +25,10 @@ public class Student {
 
     private String phoneNumber;
 
-    public Student() {
+    public Teacher() {
     }
 
-    public Student(String firstName, String lastName, String email, String phoneNumber) {
+    public Teacher(String firstName, String lastName, String email, String phoneNumber) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -72,18 +73,5 @@ public class Student {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Student student = (Student) o;
-        return Objects.equals(id, student.id) && Objects.equals(firstName, student.firstName) && Objects.equals(lastName, student.lastName) && Objects.equals(email, student.email) && Objects.equals(phoneNumber, student.phoneNumber);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, firstName, lastName, email, phoneNumber);
     }
 }

@@ -1,17 +1,17 @@
 package se.iths.service;
 
-import net.bytebuddy.implementation.bytecode.Throw;
 import se.iths.entity.Student;
-import se.iths.exceptions.StudentBadRequestException;
+import se.iths.exceptions.EntityNotFoundException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
-import javax.transaction.TransactionalException;
-import javax.validation.ConstraintViolationException;
-import javax.ws.rs.BadRequestException;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+
+import static java.util.Objects.isNull;
+import static se.iths.util.Utils.stringBuilder;
 
 @Transactional
 public class StudentService {
@@ -28,14 +28,19 @@ public class StudentService {
     }
 
     public Student findStudentById(Long id) {
-        return entityManager.find(Student.class, id);
+        Student foundStudent = entityManager.find(Student.class, id);
+
+        if(foundStudent == null) {
+            throw new EntityNotFoundException("Student with ID " + id + " was not found.");
+        }
+
+        return foundStudent;
     }
 
     public List<Student> findCustomStudents(Map<String, String> queryMap) {
+        String queryString = stringBuilder(removeEmptyParams(queryMap), "Student");
 
-        String queryString = stringBuilder(removeEmptyParams(queryMap));
-
-        return entityManager.createQuery(queryString).getResultList();
+        return entityManager.createQuery(queryString, Student.class).getResultList();
     }
 
     public List<Student> getAllStudents() {
@@ -49,13 +54,13 @@ public class StudentService {
     public Student updateStudent(Long id, Student newStudent) {
         Student oldStudent = findStudentById(id);
 
-        if(newStudent.getFirstName() != null)
+        if(!isNull(newStudent.getFirstName()))
             oldStudent.setFirstName(newStudent.getFirstName());
-        if(newStudent.getLastName() != null)
+        if(!isNull(newStudent.getLastName()))
             oldStudent.setLastName(newStudent.getLastName());
-        if(newStudent.getEmail() != null)
+        if(!isNull(newStudent.getEmail()))
             oldStudent.setEmail(newStudent.getEmail());
-        if(newStudent.getPhoneNumber() != null)
+        if(!isNull(newStudent.getPhoneNumber()))
             oldStudent.setPhoneNumber(newStudent.getPhoneNumber());
 
         return entityManager.merge(oldStudent);
@@ -65,24 +70,6 @@ public class StudentService {
         return queryMap.entrySet().stream()
                 .filter(q -> q.getValue() != null)
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-    }
-
-    private String stringBuilder(Map<String, String> queryMap) {
-        String queryString = "SELECT s FROM Student s WHERE ";
-
-        if(!queryMap.isEmpty()) {
-            for (Map.Entry<String, String> param : queryMap.entrySet()) {
-                queryString += " s." + param.getKey() + " = '" + param.getValue() + "' AND ";
-            }
-        } else {
-            throw new StudentBadRequestException("You must add at least one parameter");
-        }
-
-        if(queryString.endsWith("AND ")) {
-            queryString = queryString.substring(0, queryString.length() - 5);
-        }
-
-        return queryString;
     }
 
 }

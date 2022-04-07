@@ -7,9 +7,10 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 @Provider
-public class GenericExceptionMapper implements ExceptionMapper<Exception> {
+public class GenericExceptionMapper implements ExceptionMapper<Throwable> {
 
-    public Response toResponse(Exception throwable) {
+    @Override
+    public Response toResponse(Throwable throwable) {
         ErrorMessage errorMessage = new ErrorMessage(throwable.getMessage(),throwable.getClass().getName(), 500);
 
         if(throwable.getMessage().contains("404")) {
