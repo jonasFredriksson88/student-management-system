@@ -32,16 +32,34 @@ public class EntityDataGenerator {
                 new Teacher("Frida","Karlsson","frida.karlsson@gmail.com","073-9755814"),
                 new Teacher("Gun","Persson","gun.persson@gmail.com","073-2504816"));
 
-        List<Subject> subjects = List.of(
-                new Subject("Matematik", teachers.get(0), List.of(students.get(0),students.get(1))),
-                new Subject("Engelska", teachers.get(1), List.of(students.get(0),students.get(1), students.get(2))),
-                new Subject("Svenska", teachers.get(2), List.of(students.get(0),students.get(2))),
-                new Subject("Gymnastik", teachers.get(3), List.of(students.get(1),students.get(3))),
-                new Subject("Tyska", teachers.get(2), List.of(students.get(3)))
-        );
-
         teachers.forEach(teacher -> entityManager.persist(teacher));
         students.forEach(student -> entityManager.persist(student));
+
+        List<Subject> subjects = List.of(
+                new Subject("Matematik"),
+                new Subject("Engelska"),
+                new Subject("Svenska"),
+                new Subject("Gymnastik"),
+                new Subject("Tyska")
+        );
+
+        subjects.get(0).addTeacher(teachers.get(0));
+        subjects.get(1).addTeacher(teachers.get(1));
+        subjects.get(2).addTeacher(teachers.get(2));
+        subjects.get(3).addTeacher(teachers.get(3));
+        subjects.get(4).addTeacher(teachers.get(2));
+
+        subjects.get(0).addStudent(students.get(0));
+        subjects.get(0).addStudent(students.get(1));
+        subjects.get(1).addStudent(students.get(0));
+        subjects.get(1).addStudent(students.get(1));
+        subjects.get(1).addStudent(students.get(2));
+        subjects.get(2).addStudent(students.get(0));
+        subjects.get(2).addStudent(students.get(2));
+        subjects.get(3).addStudent(students.get(1));
+        subjects.get(3).addStudent(students.get(3));
+        subjects.get(4).addStudent(students.get(3));
+
         subjects.forEach(subject -> entityManager.persist(subject));
     }
 

@@ -1,8 +1,9 @@
 package se.iths.entity;
 
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 @Table(name = "students")
@@ -23,6 +24,9 @@ public class Student {
     private String email;
 
     private String phoneNumber;
+
+    @ManyToMany(targetEntity = Subject.class,mappedBy = "students",cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    private Set<Subject> subjects = new HashSet<>();
 
     public Student() {
     }
@@ -74,6 +78,28 @@ public class Student {
         this.phoneNumber = phoneNumber;
     }
 
+    @JsonbTransient
+    public Set<Subject> getSubjects() {
+        return subjects;
+    }
+
+    public void setSubjects(Set<Subject> subjects) {
+        this.subjects = subjects;
+    }
+
+    public void addSubject(Subject subject) {
+        this.subjects.add(subject);
+    }
+
+    public void removeSubject(Subject subject) {
+        this.subjects.remove(subject);
+        subject.getStudents().remove(this);
+    }
+
+    public void removeAllSubjects() {
+        this.subjects.forEach(subject -> subject.removeStudent(this));
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -86,4 +112,5 @@ public class Student {
     public int hashCode() {
         return Objects.hash(id, firstName, lastName, email, phoneNumber);
     }
+
 }

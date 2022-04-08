@@ -48,7 +48,9 @@ public class TeacherService {
     }
 
     public void removeTeacher(Long id) {
-        entityManager.remove(findTeacherById(id));
+        Teacher foundTeacher = findTeacherById(id);
+        foundTeacher.removeAllSubjects();
+        entityManager.remove(foundTeacher);
     }
 
     public Teacher updateTeacher(Long id, Teacher newTeacher) {
