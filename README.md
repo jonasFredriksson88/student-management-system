@@ -99,7 +99,7 @@ http://localhost:8080/student-management-system/api/v1/students/{id}
  		- Gunnar Göransson
  		- Berit Svensson
  - Svenska
-    	- Lärare
+     - Lärare
  		- Frida Karlsson
  	- Elever
  		- Bertil Eriksson
@@ -111,7 +111,7 @@ http://localhost:8080/student-management-system/api/v1/students/{id}
  		- Gunnar Göransson
  		- Lisa Johansson
  - Tyska
-     	- Lärare
+     - Lärare
  		- Frida Karlsson
  	- Elever
  		- Lisa Johansson
